@@ -22,7 +22,6 @@ Customer ID, Transaction Timestamp, Transaction Amount (euro), Store ID
 
 We want to print on the console a list of all “Loyal” customers.
 A loyal customer is a customer, who:
- - made purchases on 2 separate days
  - made purchases at 2 different stores
  - spent a minimum of 100 euro
 
