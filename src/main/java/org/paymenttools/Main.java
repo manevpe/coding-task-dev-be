@@ -9,9 +9,10 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 
 /*
 
@@ -27,7 +28,8 @@ A loyal customer is a customer, who:
 
  */
 public class Main {
-    public static List<List<String[]>> data = new ArrayList<>();
+    public static List<Transaction> data = new ArrayList<>();
+    public static Map<String, Customer> customers = new HashMap<>();
     public static int daysCount = 2;
 
     public static List<String[]> readLineByLine(Path filePath) throws Exception {
@@ -60,18 +62,50 @@ public class Main {
         return readAllLines(path);
     }
 
-    public static void printLoyalCustomer() {
-        for (int i = 0; i < data.size(); i++) {
-            for (int j = 0; j < data.get(i).size(); j++) {
-                System.out.println(Arrays.toString(data.get(i).get(j)));
+    public static List<String> printLoyalCustomer() {
+        System.out.println("Looking for loyal customers:");
+        List<String> loyalCustomers = new ArrayList<>();
+        customers.forEach((key, value) -> {
+            if (value.isLoyal) {
+                loyalCustomers.add(value.id);
+                System.out.println("New loyal customer found:");
+                System.out.println(value);
             }
-        }
+        });
+        System.out.println("Finished looking for loyal customers...");
+        return loyalCustomers;
     }
 
     public static void main(String[] args) throws Exception {
+        // Read all transactions from all days into the "data" list
         for (int i = 1; i <= daysCount; i++) {
-            data.add(getAllEntriesForDay(i));
+            List<String[]> dailyTransactionData = getAllEntriesForDay(i);
+            dailyTransactionData.forEach(transactionData -> {
+                Transaction newTransaction = new Transaction(
+                        transactionData[0],
+                        transactionData[1],
+                        Double.parseDouble(transactionData[2]),
+                        transactionData[3]
+                );
+                data.add(newTransaction);
+            });
         }
+
+        // Produce the Customers structure
+        customers = data.stream().collect(Collectors.toMap(t -> t.CustomerID, t -> {
+            return new Customer(t.CustomerID, new ArrayList<>(List.of(t)), false);
+        }, (first, second) -> {
+            return new Customer(
+                    first.id,
+                    // Join the two transactions lists
+                    new ArrayList<>(Stream.concat(first.transactions.stream(), second.transactions.stream()).toList()),
+                    first.isLoyal);
+        }));
+
+        // TODO - calculate loyalty
+
+        // Print all loyal customers
         printLoyalCustomer();
     }
 }
+
