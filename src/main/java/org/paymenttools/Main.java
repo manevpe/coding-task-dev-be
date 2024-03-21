@@ -25,7 +25,7 @@ We want to print on the console a list of all “Loyal” customers.
 A loyal customer is a customer, who:
  - made purchases at 2 different stores
  - spent a minimum of 100 euro
-
+ 
  */
 public class Main {
     public static List<Transaction> data = new ArrayList<>();
@@ -108,4 +108,3 @@ public class Main {
         printLoyalCustomer();
     }
 }
-
