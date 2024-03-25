@@ -21,7 +21,7 @@ We are given two logs files, containing money transaction information in a strin
 Each log entry contains the following info:
 Customer ID, Transaction Timestamp, Transaction Amount (euro), Store ID
 
-We want to print on the console a list of all “Loyal” customers.
+We want to print on the console a list of all Loyal customers.
 A loyal customer is a customer, who:
  - made purchases at 2 different stores
  - spent a minimum of 100 euro
